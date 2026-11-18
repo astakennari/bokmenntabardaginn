@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="is">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bókmenntabardaginn – Raunsæi og Aldamótin</title>
+<style>
+:root{--bg:#0b1220;--panel:#111c31;--panel2:#192640;--text:#f8fafc;--muted:#aab6ca;--line:#2c3b5b;--blue:#7dd3fc;--green:#86efac;--gold:#facc15;--red:#fb7185}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#21385f,#0b1220 55%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+.app{width:min(780px,100%);margin:auto;padding:18px 14px 38px}.hero{text-align:center;padding:8px 5px 18px}.kicker{text-transform:uppercase;letter-spacing:.14em;color:var(--blue);font-size:.78rem;font-weight:800}.hero h1{font-size:clamp(2rem,8vw,3.4rem);margin:.25rem 0}.hero p{color:var(--muted);margin:0}
+.card{background:rgba(17,28,49,.96);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 18px 55px #0005}.hidden{display:none!important}
+h2{margin-top:0}.modes{display:grid;gap:12px;margin:18px 0}.mode{text-align:left;background:var(--panel2);color:#fff;border:1px solid var(--line);padding:17px;border-radius:16px}.mode strong{display:block;font-size:1.08rem}.mode span{display:block;color:var(--muted);margin-top:4px}
+input{width:100%;padding:15px;border-radius:14px;border:1px solid var(--line);background:#091121;color:white;font-size:1rem}
+button{border:0;border-radius:14px;padding:14px 17px;font-size:1rem;font-weight:800;cursor:pointer;background:var(--blue);color:#092032}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#263653;color:#fff}.gold{background:var(--gold);color:#281f00}
+.top{display:flex;justify-content:space-between;gap:8px;margin-bottom:14px}.pill{background:#20304d;padding:8px 11px;border-radius:999px;font-size:.86rem;font-weight:750}
+.progress{height:9px;background:#07101f;border-radius:99px;overflow:hidden;margin-bottom:20px}.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--green));transition:.25s}
+.meta{color:var(--muted);font-size:.88rem}.question{font-size:clamp(1.35rem,5vw,1.9rem);line-height:1.25;margin:8px 0 20px}.questionImage{display:none;width:min(100%,330px);max-height:260px;object-fit:cover;border-radius:18px;border:1px solid var(--line);margin:0 auto 16px;box-shadow:0 10px 30px #0005}.questionImage.show{display:block}.imageCredit{text-align:center;color:#71809a;font-size:.7rem;margin:-8px 0 15px}.answers{display:grid;gap:10px}.answer{text-align:left;background:#192844;color:white;border:1px solid #334666;min-height:56px}.answer.correct{border-color:var(--green);background:#123b2b}.answer.wrong{border-color:var(--red);background:#411d2a}.feedback{margin-top:15px;background:#091222;padding:14px;border-radius:14px;line-height:1.5}.next{text-align:right;margin-top:15px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.stat{background:#091222;border:1px solid var(--line);border-radius:15px;padding:13px;text-align:center}.stat b{display:block;font-size:1.35rem}.stat small{color:var(--muted)}.score{font-size:3.6rem;text-align:center;font-weight:950;color:var(--gold)}.rank{text-align:center;font-size:1.25rem;font-weight:800}.note{text-align:center;color:var(--muted);line-height:1.5}.review{margin-top:20px;border-top:1px solid var(--line);padding-top:14px}.review div{padding:9px 0;border-bottom:1px solid #253450;font-size:.9rem}.small{font-size:.8rem;color:var(--muted)}
+footer{text-align:center;color:#6f7d95;font-size:.75rem;margin-top:15px}
+@media(max-width:520px){.card{padding:18px}.stats{gap:7px}.stat{padding:10px 5px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="hero">
+<div class="kicker">Lokasprettur í bókmenntasögu</div>
+<h1>Bókmenntabardaginn 🎮</h1>
+<p>Raunsæi → Aldamótin → Nýrómantík</p>
+</header>
+
+<section id="start" class="card">
+<h2>Tilbúin/n í lokabardaga? ⚔️</h2>
+<p>Leikurinn tekur saman efnið úr köflunum <strong>Raunsæi 1882–1900</strong> og <strong>Aldamótin</strong>. Veldu ham og sjáðu hvað þú manst.</p>
+<label class="small" for="name">Nafn eða gælunafn</label>
+<input id="name" maxlength="24" placeholder="t.d. Bókaormurinn">
+<div class="modes">
+<button class="mode" data-mode="practice"><strong>📚 Æfingahamur</strong><span>20 blandaðar spurningar. Þú færð skýringu strax.</span></button>
+<button class="mode" data-mode="battle"><strong>⚔️ Bókmenntabardaginn</strong><span>30 spurningar. Hraði skiptir máli og stig geta hoppað upp.</span></button>
+<button class="mode" data-mode="boss"><strong>🔥 BOSS FIGHT</strong><span>10 erfiðar blandaðar spurningar. Geturðu sigrað lokabossann?</span></button>
+</div>
+</section>
+
+<section id="game" class="card hidden">
+<div class="top"><span class="pill" id="player"></span><span class="pill" id="score">0 stig</span></div>
+<div class="progress"><div id="bar"></div></div>
+<div class="meta" id="meta"></div>
+<img id="questionImage" class="questionImage" alt=""><div id="imageCredit" class="imageCredit"></div><h2 class="question" id="q"></h2>
+<div class="answers" id="answers"></div>
+<div class="feedback hidden" id="feedback"></div>
+<div class="next"><button class="secondary hidden" id="next">Næsta →</button></div>
+</section>
+
+<section id="result" class="card hidden">
+<div class="kicker">Leik lokið</div><h2 style="text-align:center">🔥 Lokabardaganum er lokið!</h2>
+<div class="score" id="final"></div><div class="rank" id="rank"></div>
+<div class="stats"><div class="stat"><b id="right"></b><small>rétt</small></div><div class="stat"><b id="pct"></b><small>rétt hlutfall</small></div><div class="stat"><b id="streak"></b><small>lengsta sería</small></div></div>
+<p class="note" id="note"></p>
+<button id="again" style="width:100%">🔄 Spila aftur</button>
+<button id="home" class="secondary" style="width:100%;margin-top:9px">Velja annan ham</button>
+<div class="review" id="review"></div>
+</section>
+<footer>Byggt á köflunum „Raunsæi“ og „Aldamótin“. Portrettmyndir: Wikimedia Commons, þar sem notkunarskilmálar eru tilgreindir sem public domain.</footer>
+</div>
+
+<script>
+const R=[
+["Hvenær er upphaf raunsæisstefnunnar á Íslandi yfirleitt miðað við?",["1871","1882","1890","1900"],1,"Upphafinu er miðað við útkomu Verðandi árið 1882."],
+["Hvað hét tímaritið sem kom út árið 1882?",["Heimdallur","Suðri","Verðandi","Dagskrá"],2,"Verðandi kom út árið 1882."],
+["Hver flutti fyrirlestra í Kaupmannahöfn árið 1871 um evrópskar bókmenntir?",["Georg Brandes","Gestur Pálsson","Hannes Hafstein","Benedikt Gröndal"],0,"Það var danski bókmenntafræðingurinn Georg Brandes."],
+["Hvað vildi Brandes að bókmenntir gerðu?",["Forðist samfélagsmál","Tækju vandamál til umræðu","Skrifuðu aðeins um náttúruna","Fylgdu rómantíkinni"],1,"Brandes vildi að bókmenntir tækju vandamál til umræðu."],
+["Hvaða atriði nefndi Brandes sem dæmi um vandamál?",["Hjónaband og samband kynjanna","Veður og sjómennsku","Íþróttir og ferðalög","Aðeins trúarbrögð"],0,"Hjónaband, samband kynjanna, eignaréttur og trúarbrögð eru nefnd."],
+["Hversu oft kom Verðandi út?",["Einu sinni","Tvisvar","Fimm sinnum","Í tíu ár"],0,"Verðandi kom einungis út einu sinni."],
+["Hverjir voru meðal útgefenda Verðandi?",["Gestur Pálsson og Einar H. Kvaran","Þorgils gjallandi og Stephan G.","Einar Benediktsson og Hulda","Jóhann Sigurjónsson og Davíð Stefánsson"],0,"Gestur Pálsson, Einar H. Kvaran, Hannes Hafstein og Bertel Þorleifsson voru útgefendur."],
+["Hvaða tímarit ritstýrði Gestur Pálsson frá 1883?",["Suðri","Verðandi","Dýravinurinn","Dagskrá"],0,"Gestur varð ritstjóri Suðra árið 1883."],
+["Hvað átti skáldið samkvæmt Gesti Pálssyni að rannsaka?",["Aðeins náttúruna","Mannlífið, einstaklinginn í samfélaginu og sálarlíf hans","Aðeins fornsögur","Aðeins trúarbrögð"],1,"Þetta er einmitt lýsing Gests á verkefni skáldsins."],
+["Hver var Gestur Pálsson fyrst og fremst sem höfundur?",["Ljóðskáld","Smásagnahöfundur","Leikskáld","Bókmenntafræðingur"],1,"Gestur var fyrst og fremst smásagnahöfundur."],
+["Hvað hét bók Þorgils gjallanda sem kom út 1892?",["Upp við fossa","Ofan úr sveitum","Þyrnar","Andvökur"],1,"Ofan úr sveitum kom út árið 1892."],
+["Hvað hét Þorgils gjallandi réttu nafni?",["Jón Stefánsson","Jón Sigurðsson","Stefán Jónsson","Jón Þorsteinsson"],0,"Þorgils gjallandi hét Jón Stefánsson."],
+["Hvaða tímarit hafði það markmið að bæta meðferð manna á dýrum?",["Suðri","Dýravinurinn","Verðandi","Heimdallur"],1,"Dýravinurinn kom fyrst út árið 1885."],
+["Hver var Stephan G. Stephansson?",["Skáld sem flutti til Vesturheims","Danskur fræðimaður","Ritstjóri Verðandi","Leikskáld sem skrifaði á dönsku"],0,"Stephan G. flutti til Vesturheims og orti á íslensku."],
+["Hvað heita ljóðabækur Stephans G. Stephanssonar?",["Andvökur","Þyrnar","Svartar fjaðrir","Söngvar förumannsins"],0,"Bækur hans voru nefndar Andvökur."],
+["Hvað hét bókin sem Þorsteinn Erlingsson gaf út 1897?",["Andvökur","Þyrnar","Dagskrá","Ofan úr sveitum"],1,"Þorsteinn safnaði kvæðum sínum saman í Þyrna árið 1897."],
+["Hvaða stefna hafði verið ríkjandi áður en raunsæið kom fram?",["Rómantík","Nýrómantík","Sýmbólismi","Náttúrustefna"],0,"Rómantíkin hafði verið ríkjandi í langan tíma."],
+["Hvaða tvær þróanir eru nefndar sem mikilvægar erlendar forsendur raunsæis?",["Iðnvæðing/stéttamunur og framfarir í náttúruvísindum","Konungdómur og kirkja","Ferðalög og sjómennska","Rómantík og miðaldir"],0,"Þetta eru tvær af þeim forsendum sem kaflinn leggur áherslu á."],
+["Hvaða vísindakenning er sérstaklega nefnd?",["Afstæðiskenningin","Þróunarkenning Darwins","Skammtafræði","Sálgreining"],1,"Þróunarkenning Charles Darwins er nefnd."],
+["Hvaða lýsing passar best við raunsæi?",["Áhersla á drauma og hið ómögulega","Áhersla á mannfélagsmein og veruleikann","Áhersla á goðsögur","Áhersla á frjálsara ljóðform"],1,"Raunsæið beinir athyglinni að veruleikanum og samfélaginu."],
+];
+const A=[
+["Hvaða ný stefna fór að bera á um og upp úr 1900?",["Nýrómantík","Raunsæi","Klassík","Miðaldastefna"],0,"Kaflinn kallar nýju stefnuna nýrómantík."],
+["Hvað var ólíkt milli raunsæis og nýrómantíkur samkvæmt kaflanum?",["Nýrómantíkin beindi athygli að hugsýnum mannsins","Nýrómantíkin skrifaði aðeins um samfélagsmein","Raunsæið fjallaði aðeins um drauma","Enginn munur var"],0,"Nýrómantíkin beinir athyglinni að hugsýnum sem búa með manninum."],
+["Við hvaða þýska heimspeking eru tengsl nýrómantíkur einkum rakin?",["Nietzsche","Goethe","Kant","Marx"],0,"Nietzsche er nefndur sérstaklega."],
+["Hvað merkir orðið symból?",["Draumur","Tákn","Raunsæi","Rím"],1,"Symból merkir tákn."],
+["Hvað varð mikilvægara í skáldskapnum í symbólisma?",["Tákn","Sögulegar staðreyndir","Fornkvæði","Röksemdafærslur"],0,"Tákn varð mikilvægara og myndmál ljóðanna átti að gefa hugmyndir til kynna."],
+["Hver flutti til Noregs og síðan Danmerkur eftir að hafa gefið út þrjár ljóðabækur?",["Jónas Guðlaugsson","Jóhann Sigurjónsson","Einar Benediktsson","Hulda"],0,"Jónas Guðlaugsson er lýst þannig í kaflanum."],
+["Hver skrifaði Fjalla-Eyvind?",["Jóhann Sigurjónsson","Einar Benediktsson","Jónas Guðlaugsson","Þorsteinn Erlingsson"],0,"Fjalla-Eyvindur er eftir Jóhann Sigurjónsson."],
+["Á hvaða máli skrifaði Jóhann Sigurjónsson leikritin sem færðu honum frama erlendis?",["Íslensku","Dönsku","Frönsku","Þýsku"],1,"Hann skrifaði leikritin á dönsku."],
+["Hvaða leikrit Jóhanns er byggt á þjóðsögum?",["Fjalla-Eyvindur","Galdra-Loftur","Bæði","Hvorugt"],2,"Efni bæði Fjalla-Eyvindar og Galdra-Lofts er byggt á þjóðsögum."],
+["Hvað var sérstakt við Einar Benediktsson?",["Hann er flókinn og verður ekki afgreiddur með einu stefnuheiti","Hann skrifaði eingöngu smásögur","Hann orti aldrei um heimspekileg efni","Hann var eingöngu raunsæisskáld"],0,"Kaflinn leggur áherslu á sérstöðu og margbreytileika Einars."],
+["Hvaða blað gaf Einar Benediktsson út á árunum 1896–98?",["Dagskrá","Suðri","Verðandi","Heimdall"],0,"Dagskrá var blað Einars."],
+["Hvað hét smásaga eftir Einar sem birtist í Dagskrá?",["Valshreiðrið","Ofan úr sveitum","Ljáðu mér vængi","Hvarf séra Odds"],0,"Valshreiðrið er nefnt sem dæmi."],
+["Hver hét fullu nafni Unnur Benediktsdóttir Bjarklind?",["Hulda","Halla","Hafdís","Halla Eyvind"],0,"Hulda hét fullu nafni Unnur Benediktsdóttir Bjarklind."],
+["Hvað einkenndi ljóðagerð Huldu sérstaklega?",["Hún notaði mikið þuluformið","Hún skrifaði eingöngu á dönsku","Hún skrifaði bara leikrit","Hún notaði aldrei þjóðkvæðaeinkenni"],0,"Hulda notaði mikið þuluformið og stuðlaði þannig að nýjung í ljóðagerð."],
+["Hvaða ljóð Huldu er nefnt í kaflanum?",["Ljáðu mér vængi","Væri ég aðeins einn af þessum fáu","Heimþrá","Sorg"],0,"Ljáðu mér vængi er nefnt sérstaklega."],
+["Hvað gerðu nýrómantísk skáld við íslenskt ljóðmál?",["Endurnýjuðu það og lögðu áherslu á hljóm og merkingu orða","Hættu að nota myndmál","Notuðu aðeins óbundið mál","Fóru aftur í fornan stíl"],0,"Kaflinn segir að þau hafi endurnýjað íslenskt ljóðmál."],
+["Hvert var algengt yrkisefni nýrómantískra skálda?",["Þrá, löngun og hið ómögulega","Aðeins þjóðfélagsmein","Aðeins sagnfræði","Aðeins dýralíf"],0,"Þrá og löngun, meðal annars eftir hinu ómögulega, eru nefnd."],
+["Hvenær var nýrómantíkin sterkust?",["Fyrstu tveimur áratugum 20. aldar","Á 17. öld","Árin 1882–1885","Eftir 1950"],0,"Hún var sterkust á fyrstu tveimur áratugum 20. aldar."],
+["Hvaða bók gaf Stefán frá Hvítadal út 1918?",["Söngvar förumannsins","Svartar fjaðrir","Andvökur","Þyrnar"],0,"Söngvar förumannsins kom út 1918."],
+["Hvaða bók gaf Davíð Stefánsson frá Fagraskógi út 1919?",["Svartar fjaðrir","Þyrnar","Dagskrá","Ljáðu mér vængi"],0,"Svartar fjaðrir kom út ári síðar, 1919."],
+];
+
+const base=[...R,...A];
+const harder=[
+["Hvaða par er rétt tengt?",["Brandes – Verðandi","Hulda – Þyrnar","Stephan G. – Dagskrá","Jóhann Sigurjónsson – Andvökur"],0,"Brandes tengist Verðandi í kaflanum."],
+["Hvaða par sýnir best muninn á stefnunum tveimur?",["Raunsæi – mannfélagsmein / Nýrómantík – hugsýnir og draumar","Raunsæi – draumar / Nýrómantík – mannfélagsmein","Bæði – aðeins þjóðsögur","Bæði – aðeins samfélagsgagnrýni"],0,"Þetta er kjarnamunurinn sem kaflarnir draga fram."],
+["Hver af þessum höfundum tilheyrir yngri hluta sögunnar?",["Georg Brandes","Gestur Pálsson","Hulda","Hannes Hafstein"],2,"Hulda birtist á fyrstu árum 20. aldar sem nýrómantískt skáld."],
+["Hvaða röð er rétt?",["Raunsæi → Nýrómantík → Stefán/Davíð á 20. öld","Nýrómantík → Verðandi → Raunsæi","Davíð → Brandes → Gestur","Hulda → Verðandi → Þorgils"],0,"Raunsæið kemur á 19. öld, nýrómantíkin um aldamót og styrkist snemma á 20. öld."],
+["Hver af þessum höfundum skrifaði leikrit á dönsku?",["Jóhann Sigurjónsson","Einar Benediktsson","Stephan G. Stephansson","Jónas Guðlaugsson"],0,"Jóhann Sigurjónsson náði frama erlendis fyrir leikrit á dönsku."],
+["Hver af þessum höfundum er tengdur Dagskrá?",["Einar Benediktsson","Gestur Pálsson","Hulda","Þorsteinn Erlingsson"],0,"Einar gaf út Dagskrá 1896–98."],
+["Hver af þessum höfundum er tengdur Andvökum?",["Stephan G. Stephansson","Jóhann Sigurjónsson","Jónas Guðlaugsson","Þorsteinn Erlingsson"],0,"Stephan G. nefndi ljóðabækur sínar Andvökur."],
+["Hver er tengdur Þyrnum?",["Þorsteinn Erlingsson","Stephan G. Stephansson","Einar Benediktsson","Jóhann Sigurjónsson"],0,"Þorsteinn gaf út Þyrna árið 1897."],
+["Hver er tengdur Ofan úr sveitum?",["Þorgils gjallandi","Stephan G. Stephansson","Hulda","Jónas Guðlaugsson"],0,"Fyrsta bók Þorgils gjallanda hét Ofan úr sveitum."],
+["Hver er tengdur „Ljáðu mér vængi“?",["Hulda","Einar Benediktsson","Jóhann Sigurjónsson","Jónas Guðlaugsson"],0,"Ljáðu mér vængi er ljóð eftir Huldu."],
+];
+
+let state={name:"",mode:"",questions:[],i:0,score:0,right:0,streak:0,best:0,results:[]};
+
+
+const IMAGES = {
+  "Georg Brandes": {
+    url:"https://upload.wikimedia.org/wikipedia/commons/a/a2/Portrait_of_Georg_Brandes.jpg",
+    alt:"Portrett af Georg Brandes",
+    credit:"Mynd: Wikimedia Commons · public domain"
+  },
+  "Gestur Pálsson": {
+    url:"https://upload.wikimedia.org/wikipedia/commons/5/5b/Gestur_P%C3%81LSSON.jpg",
+    alt:"Portrett af Gesti Pálssyni",
+    credit:"Mynd: Wikimedia Commons · public domain"
+  },
+  "Hannes Hafstein": {
+    url:"https://upload.wikimedia.org/wikipedia/commons/7/7f/Hannes_Hafsteinn.jpg",
+    alt:"Portrett af Hannesi Hafstein",
+    credit:"Mynd: Wikimedia Commons · public domain"
+  },
+  "Stephan G. Stephansson": {
+    url:"https://upload.wikimedia.org/wikipedia/commons/b/b0/Stephan_G_Stephansson.jpg",
+    alt:"Portrett af Stephan G. Stephanssyni",
+    credit:"Mynd: Wikimedia Commons · public domain"
+  },
+  "Þorsteinn Erlingsson": {
+    url:"https://upload.wikimedia.org/wikipedia/commons/5/56/Thorsteinn_erlingsson.jpg",
+    alt:"Portrett af Þorsteini Erlingssyni",
+    credit:"Mynd: Wikimedia Commons · public domain"
+  },
+  "Jóhann Sigurjónsson": {
+    url:"https://upload.wikimedia.org/wikipedia/commons/1/1d/Portrait_of_J%C3%B3hann_Sigurj%C3%B3nsson.jpg",
+    alt:"Portrett af Jóhanni Sigurjónssyni",
+    credit:"Mynd: Wikimedia Commons · public domain"
+  },
+  "Hulda": {
+    url:"https://upload.wikimedia.org/wikipedia/commons/3/3e/Unnur_Benediktsdottir_Bjarklind_%281881_1946%29.jpg",
+    alt:"Portrett af Huldu (Unni Benediktsdóttur Bjarklind)",
+    credit:"Mynd: Wikimedia Commons · public domain"
+  }
+};
+
+const $=x=>document.getElementById(x);
+function esc(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function start(mode){
+ state={name:$("name").value.trim()||"Bókaormurinn",mode,questions:[],i:0,score:0,right:0,streak:0,best:0,results:[]};
+ let pool=mode==="boss"?harder:base;
+ if(mode==="practice") state.questions=shuffle(pool).slice(0,20);
+ else if(mode==="battle") state.questions=shuffle(pool).slice(0,30);
+ else state.questions=shuffle(harder).slice(0,10);
+ $("start").classList.add("hidden");$("result").classList.add("hidden");$("game").classList.remove("hidden");
+ $("player").textContent="👤 "+state.name;render();
+}
+function render(){
+ const x=state.questions[state.i]; $("meta").textContent=`${state.i+1} / ${state.questions.length}`;
+ $("bar").style.width=(state.i/state.questions.length*100)+"%";
+ $("q").textContent=x[0];$("feedback").classList.add("hidden");$("next").classList.add("hidden");
+ const img=$("questionImage"), credit=$("imageCredit");
+ let found=null;
+ for(const key of Object.keys(IMAGES)){ if(x[0].includes(key)) {found=IMAGES[key];break;} }
+ if(found){img.src=found.url;img.alt=found.alt;img.classList.add("show");credit.textContent=found.credit;}
+ else{img.removeAttribute("src");img.alt="";img.classList.remove("show");credit.textContent="";}
+ const box=$("answers");box.innerHTML="";
+ shuffle(x[1].map((t,i)=>({t,i}))).forEach(o=>{let b=document.createElement("button");b.className="answer";b.textContent=o.t;b.onclick=()=>answer(o.i,b);box.appendChild(b)});
+}
+function answer(i,btn){
+ const x=state.questions[state.i],buttons=[...$("answers").children];buttons.forEach(b=>b.disabled=true);
+ let ok=i===x[2];state.results.push({q:x[0],ok,right:x[1][x[2]]});
+ if(ok){state.right++;state.streak++;state.best=Math.max(state.best,state.streak);let pts=500+Math.max(0,250-state.i*3)+state.streak*40;state.score+=pts;btn.classList.add("correct")}
+ else{state.streak=0;btn.classList.add("wrong");buttons.forEach(b=>{if(b.textContent===x[1][x[2]])b.classList.add("correct")})}
+ $("score").textContent=state.score+" stig";
+ let f=$("feedback");f.innerHTML=(ok?"✅ <strong>Rétt!</strong> ":"❌ <strong>Ekki alveg.</strong> ")+x[3];f.classList.remove("hidden");$("next").classList.remove("hidden");
+}
+$("next").onclick=()=>{if(state.i+1<state.questions.length){state.i++;render()}else finish()};
+function finish(){
+ $("game").classList.add("hidden");$("result").classList.remove("hidden");$("bar").style.width="100%";
+ let p=Math.round(state.right/state.questions.length*100);$("final").textContent=state.score+" stig";$("right").textContent=state.right+"/"+state.questions.length;$("pct").textContent=p+"%";$("streak").textContent=state.best;
+ let r=p>=90?"👑 BÓKMENNTAMEISTARI":p>=75?"🔥 Raunsæis- og nýrómantíkusérfræðingur":p>=60?"🕵️ Bókmenntadetektív":"📚 Bókmenntaáhugamaður";$("rank").textContent=r;
+ $("note").textContent=p>=90?"Þú ert tilbúin/n í lokabardaga!":p>=75?"Mjög gott – þú ert komin/n langt!":"Ein æfingaferð í viðbót og þú verður mun sterkari.";
+ $("review").innerHTML="<h3>Það sem þú þarft helst að rifja upp</h3>"+state.results.filter(x=>!x.ok).slice(0,8).map(x=>`<div>❌ ${esc(x.q)}<br><span class="small">Rétt svar: ${esc(x.right)}</span></div>`).join("")+(state.results.every(x=>x.ok)?"<p>🎉 Engin röng svör – glæsilegt!</p>":"");
+}
+document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>start(b.dataset.mode));
+$("again").onclick=()=>start(state.mode);
+$("home").onclick=()=>{$("result").classList.add("hidden");$("start").classList.remove("hidden");$("name").value=state.name};
+$("name").addEventListener("keydown",e=>{if(e.key==="Enter")start("practice")});
+</script>
+</body>
+</html>
